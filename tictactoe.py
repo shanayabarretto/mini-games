@@ -28,34 +28,52 @@ def checkWin():
             check = True
     return check
 
+def play():
+    global carryOn 
+    global o
+    global grid
+    global round
+    global mode
+    screen.fill(WHITE)
+    text = tttFont.render('TIC TAC TOE' , True , BLACK)
+    screen.blit(text, (100, 40))
+    drawGrid()
+    carryOn = True # Variable that controls game operation
+    o = True # keeps track of character
+    grid = ["", "", "", "", "", "", "", "", ""] # Grid will be filled out as spots are taken
+    round = 0
+    mode = "play"
+    
+def restart():
+    if checkWin():
+        if o:
+            char = "O"
+        else:
+            char = "X"
+        text = tttFont.render("Congrats " + char, True, BLACK)
+    else:
+        text = tttFont.render("     " + "Draw", True, BLACK)
+    screen.fill(WHITE)
+    screen.blit(text, (110, 150))
+    text = tttFont.render("Press space to", True, BLACK)
+    screen.blit(text, (90, 250))
+    text = tttFont.render("play again", True, BLACK)
+    screen.blit(text, (115, 300))
+
 # Globals
 squares = []
 coords = []
-endsq = pygame.Rect(50, 225, 300, 100)
-
 # setting constants for colours
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
-
 # game window configuration
 size = (400, 500)
 screen = pygame.display.set_mode(size)
 pygame.display.set_caption("TIC TAC TOE")
+# fonts
 tttFont = pygame.font.SysFont('helvetica', 40, bold = True)
 ansFont = pygame.font.SysFont('helvetica', 100, bold = True)
-
-screen.fill(WHITE)
-text = tttFont.render('TICTACTOE' , True , BLACK)
-screen.blit(text, (110, 40))
-drawGrid()
-# Variable that controls game operation
-carryOn = True
-# keeps track of character
-o = True
-# Grid will be filled out as spots are taken
-grid = ["", "", "", "", "", "", "", "", ""]
-round = 0
-play = True
+play()
 
 # Controls updates
 clock = pygame.time.Clock()
@@ -65,9 +83,9 @@ while carryOn and round < 9:
     for event in pygame.event.get(): # User did something
         if event.type == pygame.QUIT: # If user clicked close
               carryOn = False # Flag that we are done so we can exit the while loop
-        elif event.type == pygame.MOUSEBUTTONUP:
+        elif event.type == pygame.MOUSEBUTTONDOWN:      
             mouse_position = pygame.mouse.get_pos()
-            if play:
+            if mode == "play":
                 for t in range(9):
                     if squares[t].collidepoint( mouse_position ):
                         if grid[t] == "":
@@ -77,13 +95,20 @@ while carryOn and round < 9:
                                 grid[t] = "X"
                             screen.blit(ansFont.render(grid[t], True , BLACK), (coords[t][0]+20, coords[t][1]-5))
                             if checkWin():
-                                carryOn = False
+                                mode = "end"
+                                restart()
                             round += 1
-                            o = not o 
-
+                            if round == 9:
+                                round = 0
+                                mode = "end"
+                                restart()
+                            o = not o
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE and mode == "end":
+                play()
     # updates the display
     pygame.display.flip()
      # Limit to 60 frames per second
     clock.tick(60)
- 
+
 pygame.quit()
