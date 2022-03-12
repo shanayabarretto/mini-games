@@ -35,7 +35,7 @@ def play():
     global round
     global mode
     screen.fill(WHITE)
-    text = tttFont.render('TIC TAC TOE' , True , BLACK)
+    text = tttFont.render('TIC TAC TOE' , True , LAVENDER)
     screen.blit(text, (100, 40))
     drawGrid()
     carryOn = True # Variable that controls game operation
@@ -50,14 +50,14 @@ def restart():
             char = "O"
         else:
             char = "X"
-        text = tttFont.render("Congrats " + char, True, BLACK)
+        text = tttFont.render("Congrats " + char, True, LAVENDER)
     else:
-        text = tttFont.render("     " + "Draw", True, BLACK)
+        text = tttFont.render("     " + "Draw", True, LAVENDER)
     screen.fill(WHITE)
     screen.blit(text, (110, 150))
-    text = tttFont.render("Press space to", True, BLACK)
+    text = tttFont.render("Press space to", True, PINK)
     screen.blit(text, (90, 250))
-    text = tttFont.render("play again", True, BLACK)
+    text = tttFont.render("play again", True, PINK)
     screen.blit(text, (115, 300))
 
 # Globals
@@ -66,6 +66,12 @@ coords = []
 # setting constants for colours
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
+LAVENDER = (165, 153, 224)
+PINK = (214, 139, 183)
+BLUE = (114, 169, 224)
+GREEN = (98, 181, 107)
+
+
 # game window configuration
 size = (400, 500)
 screen = pygame.display.set_mode(size)
@@ -91,9 +97,10 @@ while carryOn and round < 9:
                         if grid[t] == "":
                             if o:
                                 grid[t] = "O"
+                                screen.blit(ansFont.render(grid[t], True , GREEN), (coords[t][0]+20, coords[t][1]-5))
                             else:
                                 grid[t] = "X"
-                            screen.blit(ansFont.render(grid[t], True , BLACK), (coords[t][0]+20, coords[t][1]-5))
+                                screen.blit(ansFont.render(grid[t], True , BLUE), (coords[t][0]+20, coords[t][1]-5))
                             if checkWin():
                                 mode = "end"
                                 restart()
